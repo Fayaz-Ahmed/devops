@@ -1,1 +1,11 @@
+orchestration system for docker containers.
+kubernets executes docker containers and manage the containers
 
+follow the master-slave(worker) node architecture.
+master node controller is kube-api-server(entry point for all the rest commands, maintain complete inflow and outflow of the cluster)
+Etcd- ditribute db for k8s.in lost of cluster we can recover from Etcd. in prod environment its mandatory to externalize etcd db from k8s cluster.
+kube-scheduler - it got information regarding slave nodes then it schedule suitable node on slave.
+
+worker node- pods,services,kubelets,kube-proxy
+kubelet- direct connection with kube api server on master node and it will manage the state of worker node.
+kube proxy is component which will provide the connection btw containers(instance of my application so end user can acces it and do their work) and external parties
