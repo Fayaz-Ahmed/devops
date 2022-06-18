@@ -9,3 +9,7 @@ kube-scheduler - it got information regarding slave nodes then it schedule suita
 worker node- pods,services,kubelets,kube-proxy
 kubelet- direct connection with kube api server on master node and it will manage the state of worker node.
 kube proxy is component which will provide the connection btw containers(instance of my application so end user can acces it and do their work) and external parties
+
+two installation methods
+k8s High Availability Deployment(1-m 2-w)
+single mode Deployment(minikube k8s cluster)
