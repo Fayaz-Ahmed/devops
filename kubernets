@@ -13,3 +13,46 @@ kube proxy is component which will provide the connection btw containers(instanc
 two installation methods
 k8s High Availability Deployment(1-m 2-w)
 single mode Deployment(minikube k8s cluster)
+
+
+all the interaction with k8s cluster with done the kubketl
+
+********** Interact Cluster Using KubeCtl **********
+1. Use the kubectl create command to create a Deployment that manages a Pod. The Pod runs a Container based on the provided Docker image.
+kubectl create deployment hello-node --image=k8s.gcr.io/echoserver:1.4
+						deployment name (image name deploy with container)
+check deployment created or not
+
+2. View the Deployment:
+kubectl get deployments
+in ready state
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+hello-node   1/1     1            1           76s
+
+how many containers are in the running state and second one define how many containers are in there.
+
+3. View the Pod:
+kubectl get pods
+
+4. Expose the Pod to the public internet using the kubectl expose command:
+in here we create service in
+kubectl expose deployment hello-node --type=LoadBalancer(service type) --port=8080
+
+**The --type=LoadBalancer flag indicates that you want to expose your Service outside of the cluster.
+NAME         TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+hello-node   LoadBalancer   10.103.255.107   <pending>     8080:30685/TCP   64s
+port internally- 8080
+externally 30685
+
+kubectl get services
+we can check our services with this command
+
+5. View the Service you created:
+minikube service hello-node
+
+CleanUP -
+1. Remove service
+kubectl delete service hello-node
+
+2. Remove Deployments-
+kubectl delete deployment hello-node
