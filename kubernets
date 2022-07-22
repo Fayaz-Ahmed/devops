@@ -1,0 +1,91 @@
+orchestration system for docker containers.
+kubernets executes docker containers and manage the containers
+
+follow the master-slave(worker) node architecture.
+master node controller is kube-api-server(entry point for all the rest commands, maintain complete inflow and outflow of the cluster)
+Etcd- ditribute db for k8s.in lost of cluster we can recover from Etcd. in prod environment its mandatory to externalize etcd db from k8s cluster.
+kube-scheduler - it got information regarding slave nodes then it schedule suitable node on slave.
+
+worker node- pods,services,kubelets,kube-proxy
+kubelet- direct connection with kube api server on master node and it will manage the state of worker node.
+kube proxy is component which will provide the connection btw containers(instance of my application so end user can acces it and do their work) and external parties
+
+two installation methods
+k8s High Availability Deployment(1-m 2-w)
+single mode Deployment(minikube k8s cluster)
+
+
+all the interaction with k8s cluster with done the kubketl
+
+********** Interact Cluster Using KubeCtl **********
+1. Use the kubectl create command to create a Deployment that manages a Pod. The Pod runs a Container based on the provided Docker image.
+kubectl create deployment hello-node --image=k8s.gcr.io/echoserver:1.4
+						deployment name (image name deploy with container)
+check deployment created or not
+
+2. View the Deployment:
+kubectl get deployments
+in ready state
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+hello-node   1/1     1            1           76s
+
+how many containers are in the running state and second one define how many containers are in there.
+
+3. View the Pod:
+kubectl get pods
+
+4. Expose the Pod to the public internet using the kubectl expose command:
+in here we create service in
+kubectl expose deployment hello-node --type=LoadBalancer(service type) --port=8080
+
+**The --type=LoadBalancer flag indicates that you want to expose your Service outside of the cluster.
+NAME         TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+hello-node   LoadBalancer   10.103.255.107   <pending>     8080:30685/TCP   64s
+port internally- 8080
+externally 30685
+
+kubectl get services
+we can check our services with this command
+
+5. View the Service you created:
+minikube service hello-node
+
+CleanUP -
+1. Remove service
+kubectl delete service hello-node
+
+2. Remove Deployments-
+kubectl delete deployment hello-node
+
+allowing k8s to have access to local docker image which we will build in local machine
+minikube docker-env(take last one)
+
+docker build
+docker build -t k8s-app-img:1.0.0 .
+
+verify our image is visible to the k8s cluster or not
+docker image ls
+
+we can use kubectl for creating deployment command and  asking kubernetes cluster to deploy this particular image
+inside pod
+
+create deployments
+kubectl create deployment k8s-app-deployment --image=k8s-app-img:1.0.0 --port=8080
+
+check deployments
+kubectl get deployment
+
+describe the deployment
+kubectl describe deployment k8s-app-deployment
+
+create service object on pod for communicate with each other
+kubectl expose deployment k8s-app-deployment --type=NodePort
+
+service details
+kubectl get service
+
+complete kubernetes cluster of ui
+minikube dashboard
+
+target port and container ports should be equal in service and deployment object
+way to run the service yaml file equals to way to run deployment yaml file
